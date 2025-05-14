@@ -93,6 +93,129 @@
     .animate-fadeIn {
       animation: fadeIn 0.3s ease-in;
     }
+
+    /* Modal background overlay */
+    .modal-overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Search highlight */
+    .search-highlight {
+      background-color: var(--color-attention-fg);
+      color: black;
+    }
+
+    /* Prevent textarea from losing focus */
+    .search-active textarea:focus {
+      outline: none !important;
+    }
+    
+    /* Lock focus in search input */
+    #searchInput:focus {
+      border: 1px solid var(--color-accent-fg);
+      box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.3);
+    }
+    
+    /* Enhanced footer styling */
+    .footer-content {
+      padding: 5px 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--color-border-default);
+    }
+    
+    .footer-stats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .footer-branding {
+      padding: 0 8px;
+      border-right: 1px solid var(--color-border-muted);
+      margin-right: 10px;
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      padding: 1px 3px;
+      background-color: var(--color-canvas-subtle);
+      border-radius: 2px;
+    }
+    /* GitHub-styled Menu Bar */
+/* GitHub-styled Menu Bar - UPDATED */
+.custom-menubar {
+  user-select: none;
+}
+
+.menu-item {
+  position: relative;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  background-color: var(--color-canvas-subtle);
+  border: 1px solid var(--color-border-default);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  display: none;
+  z-index: 100;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+/* Remove this rule that shows on hover */
+/* .menu-item:hover > .menu-dropdown {
+  display: block;
+} */
+
+/* Add this rule to show based on class instead */
+.menu-dropdown.show {
+  display: block;
+}
+
+.menu-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 16px;
+  text-align: left;
+  border: none;
+  background: none;
+  color: var(--color-fg-default);
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+}
+
+.menu-option:hover {
+  background-color: var(--color-accent-emphasis);
+  color: white;
+}
+
+.menu-divider {
+  height: 1px;
+  background-color: var(--color-border-default);
+  margin: 4px 0;
+}
+
+.menu-shortcut {
+  margin-left: auto;
+  font-size: 12px;
+  opacity: 0.7;
+  padding-left: 24px;
+}
+
+/* Active menu styling */
+.menu-item.active > button {
+  background-color: var(--color-accent-emphasis);
+  color: white;
+}
   </style>
 </head>
 <body class="flex flex-col h-screen bg-[#0d1117] text-[#c9d1d9]">
@@ -112,13 +235,135 @@
         <button id="saveBtn" class="px-3 py-1.5 text-sm transition bg-[#238636] rounded-md hover:bg-[#2ea043] text-white border border-[rgba(240,246,252,0.1)] gh-transition">
           <i class="mr-1 text-xs fas fa-save"></i>Save
         </button>
+        <button id="searchBtn" class="px-3 py-1.5 text-sm transition bg-[#21262d] rounded-md hover:bg-[#30363d] border border-[#30363d] gh-transition">
+          <i class="mr-1 text-xs fas fa-search"></i>Search
+        </button>
+        <button id="settingsBtn" class="px-3 py-1.5 text-sm transition bg-[#21262d] rounded-md hover:bg-[#30363d] border border-[#30363d] gh-transition">
+          <i class="mr-1 text-xs fas fa-cog"></i>Settings
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Custom GitHub-styled Menu Bar -->
+<div class="custom-menubar flex bg-[#161b22] border-b border-[#30363d] text-[#c9d1d9] text-sm">
+  <!-- File Menu -->
+  <div class="relative menu-item">
+    <button class="px-4 py-2 hover:bg-[#1f2937]">File</button>
+    <div class="menu-dropdown">
+      <button class="menu-option" data-action="new-note">
+        <i class="mr-2 fas fa-plus"></i>New Note
+        <span class="menu-shortcut">Ctrl+N</span>
+      </button>
+      <button class="menu-option" data-action="open-note">
+        <i class="mr-2 fas fa-folder-open"></i>Open
+        <span class="menu-shortcut">Ctrl+O</span>
+      </button>
+      <button class="menu-option" data-action="save-note">
+        <i class="mr-2 fas fa-save"></i>Save
+        <span class="menu-shortcut">Ctrl+S</span>
+      </button>
+      <button class="menu-option" data-action="save-note-as">
+        <i class="mr-2 fas fa-file-export"></i>Save As
+        <span class="menu-shortcut">Ctrl+Shift+S</span>
+      </button>
+      <div class="menu-divider"></div>
+      <button class="menu-option" data-action="settings">
+        <i class="mr-2 fas fa-cog"></i>Settings
+      </button>
+      <div class="menu-divider"></div>
+      <button class="menu-option" data-action="exit">
+        <i class="mr-2 fas fa-sign-out-alt"></i>Exit
+        <span class="menu-shortcut">Ctrl+Q</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Edit Menu -->
+  <div class="relative menu-item">
+    <button class="px-4 py-2 hover:bg-[#1f2937]">Edit</button>
+    <div class="menu-dropdown">
+      <button class="menu-option" data-action="undo">
+        <i class="mr-2 fas fa-undo"></i>Undo
+        <span class="menu-shortcut">Ctrl+Z</span>
+      </button>
+      <button class="menu-option" data-action="redo">
+        <i class="mr-2 fas fa-redo"></i>Redo
+        <span class="menu-shortcut">Ctrl+Y</span>
+      </button>
+      <div class="menu-divider"></div>
+      <button class="menu-option" data-action="cut">
+        <i class="mr-2 fas fa-cut"></i>Cut
+        <span class="menu-shortcut">Ctrl+X</span>
+      </button>
+      <button class="menu-option" data-action="copy">
+        <i class="mr-2 fas fa-copy"></i>Copy
+        <span class="menu-shortcut">Ctrl+C</span>
+      </button>
+      <button class="menu-option" data-action="paste">
+        <i class="mr-2 fas fa-paste"></i>Paste
+        <span class="menu-shortcut">Ctrl+V</span>
+      </button>
+      <div class="menu-divider"></div>
+      <button class="menu-option" data-action="find">
+        <i class="mr-2 fas fa-search"></i>Find
+        <span class="menu-shortcut">Ctrl+F</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- View Menu -->
+  <div class="relative menu-item">
+    <button class="px-4 py-2 hover:bg-[#1f2937]">View</button>
+    <div class="menu-dropdown">
+      <button class="menu-option" data-action="reload">
+        <i class="mr-2 fas fa-sync-alt"></i>Reload
+        <span class="menu-shortcut">Ctrl+R</span>
+      </button>
+      <button class="menu-option" data-action="toggle-fullscreen">
+        <i class="mr-2 fas fa-expand"></i>Toggle Fullscreen
+        <span class="menu-shortcut">F11</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Help Menu -->
+  <div class="relative menu-item">
+    <button class="px-4 py-2 hover:bg-[#1f2937]">Help</button>
+    <div class="menu-dropdown">
+      <button class="menu-option" data-action="about">
+        <i class="mr-2 fas fa-info-circle"></i>About NextExt
+      </button>
+    </div>
+  </div>
+</div>
   
   <!-- Tab bar for open files -->
   <div class="flex overflow-x-auto bg-[#161b22] border-b border-[#30363d]" id="tabs-container">
     <!-- Tabs will be dynamically added here -->
+  </div>
+
+  <!-- Search bar - hidden by default -->
+  <div id="searchContainer" class="hidden p-2 bg-[#161b22] border-b border-[#30363d] flex items-center">
+    <div class="flex items-center flex-1 max-w-xl mx-auto">
+      <div class="relative flex items-center flex-1">
+        <input type="text" id="searchInput" placeholder="Search in document..." 
+               class="flex-1 p-1.5 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9] placeholder-[#6e7681] gh-input-focus">
+        <button id="searchExecuteBtn" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#8b949e] hover:text-[#58a6ff]">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      <button id="prevMatchBtn" class="ml-2 p-1.5 bg-[#21262d] rounded hover:bg-[#30363d] border border-[#30363d]">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+      <button id="nextMatchBtn" class="ml-1 p-1.5 bg-[#21262d] rounded hover:bg-[#30363d] border border-[#30363d]">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <span id="matchCounter" class="mx-2 text-[#8b949e]">0/0</span>
+      <button id="searchCloseBtn" class="p-1.5 text-[#8b949e] hover:text-[#f85149]">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
   </div>
   
   <div class="flex flex-1 overflow-hidden">
@@ -154,18 +399,238 @@
     </main>
   </div>
   
-  <footer class="flex justify-between p-2 text-sm text-center text-[#8b949e] bg-[#161b22] border-t border-[#30363d]">
-    <span class="flex items-center">
-      <i class="fas fa-code text-[#58a6ff] mr-2"></i>
-      Created with Electron and Tailwind CSS
-    </span>
-    <span id="status-message" class="px-2"></span>
+  <!-- Enhanced Footer with more spacing -->
+  <footer class="bg-[#161b22] text-[#8b949e]">
+    <div class="footer-content">
+      <div class="footer-stats">
+        <div class="footer-branding">
+          <span class="flex items-center font-medium">
+            <i class="fas fa-code text-[#58a6ff] mr-2"></i>
+            <span>NextExt</span>
+          </span>
+        </div>
+        
+        <div class="stat-item">
+          <i class="fas fa-font text-[#8b949e] mr-2"></i>
+          <span>Words: </span>
+          <span id="wordCount" class="ml-1 font-medium text-[#c9d1d9]">0</span>
+        </div>
+        
+        <div class="stat-item">
+          <i class="fas fa-text-width text-[#8b949e] mr-2"></i>
+          <span>Characters: </span>
+          <span id="charCount" class="ml-1 font-medium text-[#c9d1d9]">0</span>
+        </div>
+        
+      </div>
+      
+      <div id="status-message" class="px-4 py-2 rounded-md"></div>
+    </div>
   </footer>
+
+  <!-- Settings Modal (Hidden by default) -->
+  <div id="settingsModal" class="fixed inset-0 z-50 flex items-center justify-center hidden modal-overlay">
+    <div class="bg-[#161b22] border border-[#30363d] rounded shadow-lg max-w-md w-full">
+      <div class="flex justify-between items-center p-4 border-b border-[#30363d]">
+        <h3 class="text-lg font-semibold">Settings</h3>
+        <button id="closeSettingsBtn" class="text-[#8b949e] hover:text-[#f85149]">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="p-4">
+        <div class="mb-4">
+          <h4 class="mb-2 font-medium">Auto Save</h4>
+          <div class="flex items-center mb-2">
+            <input type="checkbox" id="autoSaveEnabled" class="mr-2">
+            <label for="autoSaveEnabled">Enable auto-save</label>
+          </div>
+          <div class="flex items-center">
+            <label for="autoSaveInterval" class="mr-2">Interval (seconds):</label>
+            <input type="number" id="autoSaveInterval" min="10" max="600" step="10" value="60"
+                   class="p-1 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9] w-20 gh-input-focus">
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <h4 class="mb-2 font-medium">Appearance</h4>
+          <div class="flex items-center">
+            <label for="fontSize" class="mr-2">Font Size:</label>
+            <input type="number" id="fontSize" min="8" max="32" value="16"
+                   class="p-1 bg-[#0d1117] border border-[#30363d] rounded text-[#c9d1d9] w-20 gh-input-focus">
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex justify-end p-4 border-t border-[#30363d]">
+        <button id="saveSettingsBtn" 
+                class="px-4 py-2 bg-[#238636] text-white rounded hover:bg-[#2ea043] gh-transition">
+          Save Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add search fix script before the main app.js -->
+  <script>
+    // This script fixes the search functionality issues
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("Applying focus fix for search...");
+      
+      // CRITICAL FIX: Override the app.js search functionality to prevent focus issues
+      window.showSearch = function() {
+        console.log("Custom showSearch called");
+        const searchContainer = document.getElementById('searchContainer');
+        const searchInput = document.getElementById('searchInput');
+        
+        if (searchContainer) {
+          searchContainer.classList.remove('hidden');
+          
+          // Ensure focus stays in search input
+          if (searchInput) {
+            setTimeout(() => {
+              searchInput.focus();
+            }, 10);
+          }
+        }
+      };
+      
+      // Fixed search input handlers
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        // Stop propagation of all events from search input
+        ['keydown', 'keyup', 'keypress', 'input', 'change', 'focus', 'blur'].forEach(eventType => {
+          searchInput.addEventListener(eventType, function(e) {
+            // Stop event from bubbling up
+            e.stopPropagation();
+            
+            // Special handling for Enter key
+            if (eventType === 'keydown' && e.key === 'Enter') {
+              e.preventDefault();
+              if (window.performSearch) {
+                window.performSearch();
+              }
+            }
+          });
+        });
+        
+        // Ensure search input keeps focus when visible
+        const keepSearchFocused = function() {
+          const searchContainer = document.getElementById('searchContainer');
+          
+          if (searchContainer && !searchContainer.classList.contains('hidden')) {
+            if (document.activeElement !== searchInput) {
+              searchInput.focus();
+            }
+          }
+        };
+        
+        // Handle click on search execute button
+        const searchExecuteBtn = document.getElementById('searchExecuteBtn');
+        if (searchExecuteBtn) {
+          searchExecuteBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (window.performSearch) {
+              window.performSearch();
+            }
+            
+            // Keep focus in search input
+            setTimeout(() => {
+              searchInput.focus();
+            }, 0);
+          });
+        }
+      }
+      
+      // Fix search close button to properly clean up
+      const searchCloseBtn = document.getElementById('searchCloseBtn');
+      if (searchCloseBtn) {
+        searchCloseBtn.addEventListener('click', function() {
+          const searchContainer = document.getElementById('searchContainer');
+          const noteContent = document.getElementById('noteContent');
+          
+          if (searchContainer) {
+            searchContainer.classList.add('hidden');
+            
+            // Clear search
+            if (window.clearSearch) {
+              window.clearSearch();
+            }
+            
+            // Return focus to editor
+            if (noteContent) {
+              noteContent.focus();
+            }
+          }
+        });
+      }
+    });
+  </script>
 
   <script src="./app.js"></script>
   <script>
     // Enhance UI without changing core functionality
     document.addEventListener('DOMContentLoaded', function() {
+      console.log("DOM loaded - applying UI enhancements");
+
+      // Additional fix for search focus issues - try again after app.js has loaded
+      const fixSearchAgain = function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        
+        if (searchBtn && window.showSearch) {
+          // Replace the click handler for search button
+          searchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.showSearch();
+          });
+        }
+        
+        // Override performSearch to keep focus in search input
+        if (window.performSearch) {
+          const originalPerformSearch = window.performSearch;
+          window.performSearch = function() {
+            originalPerformSearch();
+            
+            // Critical: ensure focus stays in search input
+            setTimeout(() => {
+              if (searchInput) searchInput.focus();
+            }, 0);
+          };
+        }
+        
+        // Override prevMatch and nextMatch to keep focus
+        if (window.prevMatch) {
+          const originalPrevMatch = window.prevMatch;
+          window.prevMatch = function() {
+            originalPrevMatch();
+            
+            // Keep focus in search input
+            setTimeout(() => {
+              if (searchInput) searchInput.focus();
+            }, 0);
+          };
+        }
+        
+        if (window.nextMatch) {
+          const originalNextMatch = window.nextMatch;
+          window.nextMatch = function() {
+            originalNextMatch();
+            
+            // Keep focus in search input
+            setTimeout(() => {
+              if (searchInput) searchInput.focus();
+            }, 0);
+          };
+        }
+      };
+      
+      // Try to fix search again after a short delay
+      setTimeout(fixSearchAgain, 500);
+      
       // Store the original functions to ensure we don't lose functionality
       const originalCreateFileElement = window.createFileElement;
       const originalCreateTabForFile = window.createTabForFile;
@@ -311,5 +776,132 @@
       }
     });
   </script>
+
+<script>
+  // Menu functionality with click-based dropdown behavior
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle showing/hiding menu dropdowns
+    const menuButtons = document.querySelectorAll('.menu-item > button');
+    menuButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const menuItem = button.parentElement;
+        const dropdown = menuItem.querySelector('.menu-dropdown');
+        const isActive = menuItem.classList.contains('active');
+        
+        // Close all menus first
+        closeAllMenus();
+        
+        // Toggle current menu if it wasn't already active
+        if (!isActive) {
+          menuItem.classList.add('active');
+          dropdown.classList.add('show');
+        }
+      });
+    });
+    
+    // Handle menu option clicks
+    const menuOptions = document.querySelectorAll('.menu-option');
+    menuOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const action = option.dataset.action;
+        console.log(`Menu action: ${action}`);
+        
+        switch (action) {
+          case 'new-note':
+            if (window.createNewNote) window.createNewNote();
+            break;
+          case 'open-note':
+            if (window.loadNote) window.loadNote();
+            break;
+          case 'save-note':
+            if (window.saveNote) window.saveNote(window.activeFileIndex);
+            break;
+          case 'save-note-as':
+            if (window.saveNoteAs) window.saveNoteAs();
+            break;
+          case 'settings':
+            if (window.toggleSettingsModal) window.toggleSettingsModal();
+            break;
+          case 'exit':
+            window.electronAPI.quit && window.electronAPI.quit();
+            break;
+          case 'find':
+            if (window.showSearch) window.showSearch();
+            break;
+          case 'about':
+            window.electronAPI.showAbout && window.electronAPI.showAbout();
+            break;
+            
+          // Standard edit operations
+          case 'undo':
+            document.execCommand('undo');
+            break;
+          case 'redo':
+            document.execCommand('redo');
+            break;
+          case 'cut':
+            document.execCommand('cut');
+            break;
+          case 'copy':
+            document.execCommand('copy');
+            break;
+          case 'paste':
+            document.execCommand('paste');
+            break;
+          case 'reload':
+            window.location.reload();
+            break;
+          case 'toggle-fullscreen':
+            window.electronAPI.toggleFullscreen && window.electronAPI.toggleFullscreen();
+            break;
+        }
+        
+        // Close all menus after action
+        closeAllMenus();
+      });
+    });
+    
+    // Close menus when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.menu-item')) {
+        closeAllMenus();
+      }
+    });
+    
+    // Close menus with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAllMenus();
+      }
+    });
+    
+    // Function to close all open menus
+    function closeAllMenus() {
+      const menuItems = document.querySelectorAll('.menu-item');
+      menuItems.forEach(item => {
+        item.classList.remove('active');
+        const dropdown = item.querySelector('.menu-dropdown');
+        if (dropdown) dropdown.classList.remove('show');
+      });
+    }
+    
+    // Update preload.js to add these functions
+    if (window.electronAPI) {
+      // These should be added to preload.js
+      window.electronAPI.quit = window.electronAPI.quit || (() => console.log('quit-app not implemented'));
+      window.electronAPI.showAbout = window.electronAPI.showAbout || (() => console.log('show-about not implemented'));
+      window.electronAPI.toggleFullscreen = window.electronAPI.toggleFullscreen || (() => console.log('toggle-fullscreen not implemented'));
+    }
+    
+    console.log('Menu system initialized');
+  });
+</script>
+
 </body>
 </html>

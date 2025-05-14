@@ -4,6 +4,7 @@ const fs = require('fs');
 const Store = require('electron-store').default;
 const store = new Store();
 
+
 let mainWindow;
 
 // Fix cache location to avoid permission errors
@@ -38,6 +39,10 @@ function createWindow() {
     },
     icon: path.join(__dirname, '../assets/icons/icon.png')
   });
+
+  
+
+  mainWindow.setMenuBarVisibility(false);
 
   mainWindow.loadFile(path.join(__dirname, 'renderer/index.html'));
 
@@ -77,6 +82,15 @@ function createWindow() {
           type: 'separator'
         },
         {
+          label: 'Settings',
+          click() {
+            mainWindow.webContents.send('menu-settings');
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
           label: 'Exit',
           accelerator: 'CmdOrCtrl+Q',
           click() {
@@ -94,7 +108,15 @@ function createWindow() {
         { role: 'cut' },
         { role: 'copy' },
         { role: 'paste' },
-        { role: 'selectAll' }
+        { role: 'selectAll' },
+        { type: 'separator' },
+        {
+          label: 'Find',
+          accelerator: 'CmdOrCtrl+F',
+          click() {
+            mainWindow.webContents.send('menu-find');
+          }
+        }
       ]
     },
     {
@@ -115,7 +137,7 @@ function createWindow() {
             dialog.showMessageBox(mainWindow, {
               title: 'About NextExt',
               message: 'NextExt - Enhanced Notepad',
-              detail: 'Version 1.0.0\nCreated with Electron and Tailwind CSS',
+              detail: 'Version 1.1.0\nCreated with Electron and Tailwind CSS\n\nFeatures:\n- Multiple tabs\n- File explorer\n- Search functionality\n- Auto-save\n- Word and character count',
               buttons: ['OK']
             });
           }
@@ -233,6 +255,24 @@ ipcMain.handle('save-note', async (event, content, title) => {
   }
 });
 
+ipcMain.handle('quit-app', () => {
+  app.quit();
+});
+
+ipcMain.handle('show-about', () => {
+  dialog.showMessageBox(mainWindow, {
+    title: 'About NextExt',
+    message: 'NextExt - Enhanced Notepad',
+    detail: 'Version 1.1.0\nCreated with Electron and Tailwind CSS\n\nFeatures:\n- Multiple tabs\n- File explorer\n- Search functionality\n- Auto-save\n- Word and character count',
+    buttons: ['OK']
+  });
+});
+
+ipcMain.handle('toggle-fullscreen', () => {
+  if (mainWindow) {
+    mainWindow.setFullScreen(!mainWindow.isFullScreen());
+  }
+});
 // Load note
 ipcMain.handle('load-note', async () => {
   try {
@@ -257,4 +297,68 @@ ipcMain.handle('load-note', async () => {
     console.error('Error loading file:', error);
     return { success: false, message: error.message };
   }
+});
+
+// Settings handlers
+ipcMain.handle('get-settings', async () => {
+  try {
+    // Default settings
+    const defaultSettings = {
+      autoSaveEnabled: true,
+      autoSaveIntervalSeconds: 60,
+      fontSize: 16
+    };
+    
+    // Get settings from store or return defaults
+    const savedSettings = store.get('settings');
+    return { ...defaultSettings, ...savedSettings };
+  } catch (error) {
+    console.error('Error loading settings:', error);
+    return null;
+  }
+});
+
+ipcMain.handle('save-settings', async (event, settings) => {
+  try {
+    store.set('settings', settings);
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving settings:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+// Search functionality helper
+ipcMain.handle('search-in-file', async (event, content, searchTerm) => {
+  try {
+    if (!content || !searchTerm) {
+      return { success: false, matches: [] };
+    }
+    
+    const matches = [];
+    const regex = new RegExp(searchTerm, 'gi');
+    let match;
+    
+    while ((match = regex.exec(content)) !== null) {
+      matches.push({
+        start: match.index,
+        end: match.index + searchTerm.length
+      });
+    }
+    
+    return { success: true, matches };
+  } catch (error) {
+    console.error('Error searching in file:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+// Add event listener for settings menu item
+ipcMain.on('menu-settings', () => {
+  mainWindow.webContents.send('menu-settings');
+});
+
+// Add event listener for find menu item
+ipcMain.on('menu-find', () => {
+  mainWindow.webContents.send('menu-find');
 });
