@@ -6,7 +6,6 @@ const store = new Store();
 
 
 let mainWindow;
-
 // Fix cache location to avoid permission errors
 app.commandLine.appendSwitch('disk-cache-dir', path.join(app.getPath('userData'), 'cache'));
 app.commandLine.appendSwitch('disable-gpu-cache');
@@ -40,7 +39,6 @@ function createWindow() {
     icon: path.join(__dirname, '../assets/icons/icon.png')
   });
 
-  
 
   mainWindow.setMenuBarVisibility(false);
 
@@ -158,7 +156,9 @@ app.whenReady().then(() => {
   ensureSaveDirectory();
 
   app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) 
+      
+      createWindow();
   });
 });
 

@@ -44,6 +44,5 @@ quit: () => ipcRenderer.invoke('quit-app'),
 showAbout: () => ipcRenderer.invoke('show-about'),
 toggleFullscreen: () => ipcRenderer.invoke('toggle-fullscreen'),
 });
-
 // Console log for debugging
 console.log('Preload script loaded successfully');
