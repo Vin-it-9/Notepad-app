@@ -2,7 +2,10 @@
 
 <div align="center">
 
-![NextExt Logo](https://img.shields.io/badge/NextExt-Enhanced%20Notepad-1f6feb?style=for-the-badge&logo=electron&logoColor=white)
+
+![NextExt](https://github.com/user-attachments/assets/94c3e7c7-bccc-4a5b-9831-9bb05c365738?style=for-the-badge&logo=electron&logoColor=white)
+
+![NextExt Logo](https://img.shields.io/badge/NextExt-Enhanced%20Notepad-1f6feb?style=for-the-badge&logo=https://github.com/user-attachments/assets/799368a4-58a1-41c4-bf94-4e6583ccddf2&logoColor=white)
 
 [![Built with Electron](https://img.shields.io/badge/Built%20with-Electron-47848F.svg?style=flat-square)](https://www.electronjs.org/)
 [![Styled with TailwindCSS](https://img.shields.io/badge/Styled%20with-TailwindCSS-38B2AC.svg?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
@@ -18,6 +21,9 @@
 ## 📝 Overview
 
 NextExt is an enhanced notepad application built with Electron and styled with TailwindCSS. It features a clean, GitHub-inspired dark mode interface with multi-tab editing, a file explorer sidebar, and automatic saving functionality.
+
+## 📝 Demo
+![image](https://github.com/user-attachments/assets/100f5256-9651-4385-b879-0a2ced89b5fa)
 
 
 ## ✨ Features
